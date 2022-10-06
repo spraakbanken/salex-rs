@@ -1,4 +1,5 @@
 use super::{SaolLemma, SoLemma};
+
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
 pub struct Superlemma {
     pub id: String,

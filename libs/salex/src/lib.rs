@@ -1,6 +1,10 @@
 pub mod application;
 pub mod domain;
+pub use crate::domain::{SaolLemma, Superlemma};
+pub use application::queries::ListSuperlemma;
+pub use karp_lex::EntryDto;
 use std::{error::Error as StdError, fmt::Display, sync::Arc};
+pub type SuperlemmaEntryDto = EntryDto<Superlemma>;
 
 pub type DynStdError = Box<dyn StdError + Send + Sync>;
 

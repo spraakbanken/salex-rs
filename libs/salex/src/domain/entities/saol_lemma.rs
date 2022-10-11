@@ -4,7 +4,7 @@ use super::Status;
 #[serde(rename_all = "camelCase")]
 pub struct SaolLemma {
     id: u32,
-    ortografi: String,
+    pub ortografi: String,
     status: Status,
     visas: bool,
     homograf_nr: Option<u32>,
@@ -14,14 +14,14 @@ pub struct SaolLemma {
     ptv: Option<bool>,
     smdb_n: Option<String>,
     hänvisningar: Vec<Hv>,
-    lemma_referenser: Vec<SaolLemmaRef>,
+    pub lemma_referenser: Vec<SaolLemmaRef>,
     ursprung: String,
     fack: Vec<String>,
-    alt: Vec<AltForm>,
+    pub alt: Vec<AltForm>,
     kommentar: Option<String>,
     lexem: Vec<SaolLexem>,
     relation: Vec<SaolRelation>,
-    lemmatyp: LemmaTyp,
+    pub lemmatyp: LemmaTyp,
     fonetik: Vec<Fonetik>,
 }
 
@@ -83,7 +83,7 @@ impl SaolLemma {
 
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
 pub struct Hv {
-    #[serde(rename = "type")]
+    // #[serde(rename = "type")]
     typ: String,
     hänvisning: String,
     visas: bool,
@@ -105,15 +105,15 @@ impl Hv {
 #[serde(rename_all = "camelCase")]
 pub struct SaolLemmaRef {
     id: u32,
-    lemmatyp: LemmaTyp,
-    ortografi: String,
+    pub lemmatyp: LemmaTyp,
+    pub ortografi: String,
     visas: bool,
     homograf_nr: Option<u32>,
     status: Status,
     hänvisningar: Vec<Hv>,
     ursprung: String,
     böjningsklass: Option<String>,
-    ordklass: Option<String>,
+    pub ordklass: Option<String>,
     saol_klass: Option<String>,
     analys: Option<String>,
     böjning: Option<String>,
@@ -218,11 +218,11 @@ impl From<&str> for LemmaTyp {
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AltForm {
-    grundform: String,
+    pub grundform: String,
     homograf_nr: Option<u32>,
     analys: Option<String>,
-    #[serde(rename = "type")]
-    typ: String,
+    // #[serde(rename = "type")]
+    pub typ: String,
     fonetik: Option<String>,
     böjning: Option<String>,
 }

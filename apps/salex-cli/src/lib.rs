@@ -1,11 +1,13 @@
 use flate2::read::GzDecoder;
+use salex::domain::entities::saol_lemma::LemmaTyp;
+use salex::domain::entities::SoLemmaType;
 use salex::{EntryDto, Superlemma};
+use serde::Deserialize;
 use serde_json::Value;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::io::BufRead;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::{fs, io, process};
-
 type Error = Box<dyn std::error::Error>;
 
 #[derive(serde::Serialize)]
@@ -94,6 +96,160 @@ pub fn read_count_and_write(reader: &mut dyn io::BufRead, output_stub: &str) -> 
                 num_saol_lemman: *num_saol_lemman,
                 num_so_lemman: *num_so_lemman,
             })?;
+            write_line_count += 1;
+        }
+    }
+    log::info!("Line written: {}", write_line_count);
+    Ok(())
+}
+
+#[derive(Clone, Debug, serde::Serialize)]
+struct WtypeOrdklass {
+    ortografi: String,
+    wtype: SoLemmaType,
+    ordklass: String,
+    ursprung: String,
+    kommentar: Option<String>,
+}
+
+pub fn lookup_wtype_ordklass(
+    data_reader: &mut dyn io::BufRead,
+    words_path: &Path,
+    output_path: &Path,
+) -> Result<(), Error> {
+    log::trace!("lookup_wtype_ordklass called ...");
+    let mut words = HashSet::new();
+    let mut result: HashMap<String, Vec<WtypeOrdklass>> = HashMap::new();
+    let mut csv_reader = csv::ReaderBuilder::new()
+        .has_headers(false)
+        .from_path(words_path)?;
+
+    let mut read_words = 0;
+    for record in csv_reader.records() {
+        let ortografi = record?;
+        words.insert(ortografi.get(0).unwrap().to_owned());
+        read_words += 1;
+    }
+    log::debug!("Words read: {}", read_words);
+
+    let mut read_lines = 0;
+    for line in data_reader.lines() {
+        read_lines += 1;
+        // log::trace!("line = {:?}", line);
+        let entry: EntryDto<Superlemma> = serde_json::from_str(&line?)?;
+
+        for so_lemma in &entry.entry.so_lemman {
+            // log::debug!("so_lemma = {:?}", so_lemma);
+            if words.contains(&so_lemma.ortografi) {
+                let ortografi = so_lemma.ortografi.clone();
+                let data = WtypeOrdklass {
+                    ortografi: so_lemma.ortografi.to_owned(),
+                    wtype: so_lemma.lemmatyp,
+                    ordklass: entry.entry.ordklass.to_owned(),
+                    ursprung: "SO".into(),
+                    kommentar: None,
+                };
+                log::debug!("data = {:?}", data);
+                result
+                    .entry(ortografi)
+                    .and_modify(|e| e.push(data.clone()))
+                    .or_insert(vec![data]);
+            }
+            for so_lemma_ref in &so_lemma.lemma_referenser {
+                if words.contains(&so_lemma_ref.ortografi) {
+                    let ortografi = so_lemma_ref.ortografi.clone();
+                    let data = WtypeOrdklass {
+                        ortografi: so_lemma_ref.ortografi.to_owned(),
+                        wtype: so_lemma_ref.lemmatyp,
+                        ordklass: entry.entry.ordklass.to_owned(),
+                        ursprung: "SO".into(),
+                        kommentar: None,
+                    };
+                    log::debug!("data = {:?}", data);
+                    result
+                        .entry(ortografi)
+                        .and_modify(|e| e.push(data.clone()))
+                        .or_insert(vec![data]);
+                }
+            }
+        }
+
+        for saol_lemma in &entry.entry.saol_lemman {
+            if words.contains(&saol_lemma.ortografi) {
+                let ortografi = saol_lemma.ortografi.clone();
+                let wtype = match &saol_lemma.lemmatyp {
+                    LemmaTyp::Lemma => SoLemmaType::Lemma,
+                    LemmaTyp::Variant => SoLemmaType::Variant,
+                    LemmaTyp::SeUnder => SoLemmaType::Pekare,
+                    _ => todo!(),
+                };
+                let data = WtypeOrdklass {
+                    ortografi: ortografi.clone(),
+                    wtype,
+                    ordklass: entry.entry.ordklass.to_owned(),
+                    ursprung: "SAOL".into(),
+                    kommentar: None,
+                };
+                log::debug!("data = {:?}", data);
+                result
+                    .entry(ortografi)
+                    .and_modify(|e| e.push(data.clone()))
+                    .or_insert(vec![data]);
+            }
+
+            for alt_form in &saol_lemma.alt {
+                let ortografi = alt_form.grundform.clone();
+                let data = WtypeOrdklass {
+                    ortografi: ortografi.clone(),
+                    wtype: SoLemmaType::Variant,
+                    ordklass: entry.entry.ordklass.to_owned(),
+                    ursprung: "SAOL".into(),
+                    kommentar: Some(format!("typ='{}'", alt_form.typ)),
+                };
+                log::debug!("data = {:?}", data);
+                result
+                    .entry(ortografi)
+                    .and_modify(|e| e.push(data.clone()))
+                    .or_insert(vec![data]);
+            }
+            for saol_lemma_ref in &saol_lemma.lemma_referenser {
+                if words.contains(&saol_lemma_ref.ortografi) {
+                    let ortografi = saol_lemma_ref.ortografi.clone();
+                    let wtype = match &saol_lemma_ref.lemmatyp {
+                        LemmaTyp::Lemma => SoLemmaType::Lemma,
+                        LemmaTyp::Variant => SoLemmaType::Variant,
+                        LemmaTyp::SeUnder => SoLemmaType::Pekare,
+                        _ => todo!(),
+                    };
+                    let ordklass: String = match &saol_lemma_ref.ordklass {
+                        Some(ref ordklass) => ordklass.clone(),
+                        None => entry.entry.ordklass.clone(),
+                    };
+                    let data = WtypeOrdklass {
+                        ortografi: ortografi.to_owned(),
+                        wtype,
+                        ordklass,
+                        ursprung: "SAOL".into(),
+                        kommentar: None,
+                    };
+                    log::debug!("data = {:?}", data);
+                    result
+                        .entry(ortografi)
+                        .and_modify(|e| e.push(data.clone()))
+                        .or_insert(vec![data]);
+                }
+            }
+        }
+    }
+    log::info!("Lines read: {}", read_lines);
+
+    let mut result_writer = csv::WriterBuilder::new()
+        .has_headers(true)
+        .from_path(output_path)?;
+    let mut write_line_count = 0;
+    for (_ortografi, findings) in &result {
+        for finding in findings {
+            result_writer.serialize(finding)?;
             write_line_count += 1;
         }
     }

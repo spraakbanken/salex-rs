@@ -1,8 +1,20 @@
-use super::{SoLemmaRef, SoLemmaType, Status};
+use super::Status;
+
+#[derive(Clone, Copy, Debug, serde::Deserialize, serde::Serialize)]
+#[serde(rename_all = "lowercase")]
+pub enum SoLemmaType {
+    Lemma,
+    Pekare,
+    Variant,
+    Vnomen,
+    Bojform,
+    Kortform,
+    Abbrev,
+}
 
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct SoLemma {
+pub struct SoLemmaRef {
     pub homograf_nr: Option<u32>,
     pub ortografi: String,
     pub visas: bool,
@@ -19,17 +31,4 @@ pub struct SoLemma {
     pub stam: String,
     pub tagg: String,
     pub ursprung: String,
-    #[serde(rename = "s_nr")]
-    pub s_nr: u32,
-    pub lemma_referenser: Vec<SoLemmaRef>,
 }
-
-// impl SoLemma {
-//     pub fn new(l_nr: u32, ortografi: String, visas: bool) -> Self {
-//         Self {
-//             l_nr,
-//             ortografi,
-//             visas,
-//         }
-//     }
-// }

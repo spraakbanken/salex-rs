@@ -198,19 +198,21 @@ pub fn lookup_wtype_ordklass(
             }
 
             for alt_form in &saol_lemma.alt {
-                let ortografi = alt_form.grundform.clone();
-                let data = WtypeOrdklass {
-                    ortografi: ortografi.clone(),
-                    wtype: SoLemmaType::Variant,
-                    ordklass: entry.entry.ordklass.to_owned(),
-                    ursprung: "SAOL".into(),
-                    kommentar: Some(format!("typ='{}'", alt_form.typ)),
-                };
-                log::debug!("data = {:?}", data);
-                result
-                    .entry(ortografi)
-                    .and_modify(|e| e.push(data.clone()))
-                    .or_insert(vec![data]);
+                if words.contains(&alt_form.grundform) {
+                    let ortografi = alt_form.grundform.clone();
+                    let data = WtypeOrdklass {
+                        ortografi: ortografi.clone(),
+                        wtype: SoLemmaType::Variant,
+                        ordklass: entry.entry.ordklass.to_owned(),
+                        ursprung: "SAOL".into(),
+                        kommentar: Some(format!("typ='{}'", alt_form.typ)),
+                    };
+                    log::debug!("data = {:?}", data);
+                    result
+                        .entry(ortografi)
+                        .and_modify(|e| e.push(data.clone()))
+                        .or_insert(vec![data]);
+                }
             }
             for saol_lemma_ref in &saol_lemma.lemma_referenser {
                 if words.contains(&saol_lemma_ref.ortografi) {

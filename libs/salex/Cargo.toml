@@ -10,3 +10,4 @@ serde = { version = "1.0.145", features = ["derive"] }
 karp-lex = { git = "https://github.com/spraakbanken/karp-backend-rs.git" }
 log = "0.4.17"
 serde_json = "1.0.85"
+async-trait = "0.1.57"

@@ -12,6 +12,7 @@ pub type DynStdError = Box<dyn StdError + Send + Sync>;
 pub enum Error {
     General(DynStdError),
     Unknown(String),
+    Infrastructure(DynStdError),
 }
 
 impl Display for Error {

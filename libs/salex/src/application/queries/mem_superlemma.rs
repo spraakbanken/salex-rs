@@ -16,7 +16,7 @@ impl InMemoryListSuperlemma {
 
 impl ListSuperlemma for InMemoryListSuperlemma {
     fn query(&self, superlemman: &mut HashMap<String, EntryDto<Superlemma>>) -> Result<(), Error> {
-        self.storage.clone();
+        for entry in &self.storage {}
         Ok(())
     }
 }

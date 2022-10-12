@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::sync::Arc;
 
 use crate::domain::Superlemma;
 use crate::Error;
@@ -11,6 +12,6 @@ pub trait ListSuperlemma {
 pub trait AsyncListSuperlemma {
     async fn query(
         &self,
-        superlemman: HashMap<String, EntryDto<Superlemma>>,
-    ) -> Result<HashMap<String, EntryDto<Superlemma>>, Error>;
+        superlemman: Arc<HashMap<String, EntryDto<Superlemma>>>,
+    ) -> Result<Arc<HashMap<String, EntryDto<Superlemma>>>, Error>;
 }

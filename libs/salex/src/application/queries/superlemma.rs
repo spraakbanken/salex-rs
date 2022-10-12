@@ -12,6 +12,6 @@ pub trait ListSuperlemma {
 pub trait AsyncListSuperlemma {
     async fn query(
         &self,
-        // superlemman: Arc<HashMap<String, EntryDto<Superlemma>>>,
-    ) -> Result<HashMap<String, EntryDto<Superlemma>>, Error>;
+        superlemman: HashMap<String, EntryDto<Superlemma>>,
+    ) -> HashMap<String, EntryDto<Superlemma>>;
 }

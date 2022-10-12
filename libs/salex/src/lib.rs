@@ -10,7 +10,6 @@ pub type DynStdError = Box<dyn StdError + Send + Sync>;
 
 #[derive(Debug)]
 pub enum Error {
-    General(DynStdError),
     Unknown(String),
     Infrastructure(String),
 }

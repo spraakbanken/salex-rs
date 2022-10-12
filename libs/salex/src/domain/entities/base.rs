@@ -1,4 +1,4 @@
-#[derive(Clone, Copy, Debug, serde::Deserialize, serde::Serialize)]
+#[derive(Clone, Copy, Debug, serde::Deserialize, serde::Serialize, PartialEq)]
 #[serde(rename_all = "UPPERCASE")]
 pub enum Status {
     Ny,

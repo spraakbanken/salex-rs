@@ -1,6 +1,7 @@
 use flate2::read::GzDecoder;
 use salex::domain::entities::saol_lemma::LemmaTyp;
 use salex::domain::entities::SoLemmaType;
+use salex::domain::entities::Status;
 use salex::{EntryDto, Superlemma};
 use serde::Deserialize;
 use serde_json::Value;
@@ -140,6 +141,9 @@ pub fn lookup_wtype_ordklass(
 
         for so_lemma in &entry.entry.so_lemman {
             // log::debug!("so_lemma = {:?}", so_lemma);
+            if so_lemma.status == Status::Förråd {
+                continue;
+            }
             if words.contains(&so_lemma.ortografi) {
                 let ortografi = so_lemma.ortografi.clone();
                 let data = WtypeOrdklass {

@@ -1,6 +1,7 @@
 use super::{SaolLemma, SoLemma};
 
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct Superlemma {
     pub id: String,
     pub ortografi: String,

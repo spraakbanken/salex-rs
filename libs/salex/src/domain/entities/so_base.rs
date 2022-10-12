@@ -32,3 +32,24 @@ pub struct SoLemmaRef {
     pub tagg: String,
     pub ursprung: String,
 }
+
+#[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct SoLemmaRelation {
+    #[serde(rename = "l_nr")]
+    l_nr: u32,
+    #[serde(rename = "i_add")]
+    i_add: u32,
+    typ: SoLemmaRelationsTyp,
+}
+
+#[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
+#[serde(rename_all = "snake_case", deny_unknown_fields)]
+pub enum SoLemmaRelationsTyp {
+    Moderverb,
+    Aktivverb,
+    Bojform,
+    Pekare,
+    Vnomen,
+    RelateratVerb,
+}

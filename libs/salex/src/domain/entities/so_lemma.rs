@@ -1,7 +1,7 @@
-use super::{SoLemmaRef, SoLemmaType, Status};
+use super::{SentensEllerStilruta, SoLemmaRef, SoLemmaRelation, SoLemmaType, SoLexem, Status};
 
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SoLemma {
     // py: Lemma
     pub homograf_nr: Option<u32>,
@@ -21,6 +21,7 @@ pub struct SoLemma {
     pub stam: String,
     pub tagg: String,
     pub ursprung: String,
+    pub uttal: Vec<Uttal>,
     // py: SoLemma
     #[serde(rename = "s_nr")]
     pub s_nr: u32,
@@ -29,9 +30,13 @@ pub struct SoLemma {
     pub sentenser_och_stilrutor: Vec<SentensEllerStilruta>,
     pub relationer: Vec<SoLemmaRelation>,
     pub artikelkommentar: String,
-    pub lemmaundertyp: String,
 }
 
+#[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct Uttal {
+    fonetik: String,
+}
 // impl SoLemma {
 //     pub fn new(l_nr: u32, ortografi: String, visas: bool) -> Self {
 //         Self {

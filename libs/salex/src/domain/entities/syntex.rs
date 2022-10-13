@@ -1,8 +1,8 @@
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct SentensEllerStilruta {
+pub struct Syntex {
     typ: String,
     text: String,
-    origid: u32,
-    orig_ord: String,
+    kommentar: String,
+    visas: bool,
 }

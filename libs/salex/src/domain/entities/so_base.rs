@@ -34,12 +34,10 @@ pub struct SoLemmaRef {
 }
 
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[serde(deny_unknown_fields)]
 pub struct SoLemmaRelation {
-    #[serde(rename = "l_nr")]
     l_nr: u32,
-    #[serde(rename = "i_add")]
-    i_add: u32,
+    id_add: u32,
     typ: SoLemmaRelationsTyp,
 }
 

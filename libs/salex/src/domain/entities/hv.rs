@@ -1,12 +1,12 @@
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct Hv {
-    typ: HänvisningsTyp,
-    hänvisning: String,
-    kommentar: String,
-    visas: bool,
-    l_nr: u32,
-    kc_nr: u32,
+    pub typ: HänvisningsTyp,
+    pub hänvisning: String,
+    pub kommentar: String,
+    pub visas: bool,
+    pub l_nr: u32,
+    pub kc_nr: u32,
 }
 
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]

@@ -32,11 +32,6 @@ pub struct SoLemma {
     pub artikelkommentar: String,
 }
 
-#[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct Uttal {
-    fonetik: String,
-}
 // impl SoLemma {
 //     pub fn new(l_nr: u32, ortografi: String, visas: bool) -> Self {
 //         Self {

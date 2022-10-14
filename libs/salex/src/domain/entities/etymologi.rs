@@ -2,10 +2,10 @@
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Etymologi {
     #[serde(rename = "ety_nr")]
-    ety_nr: u32,
-    första_belägg: String,
-    källa: String,
-    beskrivning: String,
-    kommentar: String,
-    visas: bool,
+    pub ety_nr: u32,
+    pub första_belägg: String,
+    pub källa: String,
+    pub beskrivning: String,
+    pub kommentar: String,
+    pub visas: bool,
 }

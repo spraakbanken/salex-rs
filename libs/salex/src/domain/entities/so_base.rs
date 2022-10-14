@@ -36,9 +36,9 @@ pub struct SoLemmaRef {
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct SoLemmaRelation {
-    l_nr: u32,
-    id_add: u32,
-    typ: SoLemmaRelationsTyp,
+    pub l_nr: u32,
+    pub id_add: u32,
+    pub typ: SoLemmaRelationsTyp,
 }
 
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]

@@ -2,11 +2,11 @@
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Valens {
     #[serde(rename = "vl_nr")]
-    vl_nr: u32,
-    typ: String,
-    valens: String,
-    prevalens_def: String,
-    valens_def: String,
-    kommentar: String,
-    visas: bool,
+    pub vl_nr: u32,
+    pub typ: String,
+    pub valens: String,
+    pub prevalens_def: String,
+    pub valens_def: String,
+    pub kommentar: String,
+    pub visas: bool,
 }

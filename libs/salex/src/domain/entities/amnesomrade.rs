@@ -2,5 +2,6 @@
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Ämnesområde {
     #[serde(rename = "ämne")]
-    amne: String,
+    pub amne: String,
+    pub specifikt: Option<String>,
 }

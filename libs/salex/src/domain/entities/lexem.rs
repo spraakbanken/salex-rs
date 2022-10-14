@@ -3,48 +3,48 @@ use super::{Etymologi, Hv, Idiom, Morfex, Syntex, Valens, Ämnesområde};
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SoLexem {
     #[serde(rename = "x_nr")]
-    x_nr: u32,
-    etymologier: Vec<Etymologi>,
-    cykler: Vec<Cykel>,
-    idiom: Vec<Idiom>,
+    pub x_nr: u32,
+    pub etymologier: Vec<Etymologi>,
+    pub cykler: Vec<Cykel>,
+    pub idiom: Vec<Idiom>,
     // py: Betydelse
     #[serde(rename = "kc_nr")]
-    kc_nr: u32,
-    definition: String,
-    formkommentar: String,
-    huvudkommentar: String,
-    formkommentar_exempel: String,
-    formkommentar_tillägg: String,
-    slutkommentar: String,
-    definitionstillägg: Option<String>,
+    pub kc_nr: u32,
+    pub definition: String,
+    pub formkommentar: String,
+    pub huvudkommentar: String,
+    pub formkommentar_exempel: String,
+    pub formkommentar_tillägg: String,
+    pub slutkommentar: String,
+    pub definitionstillägg: Option<String>,
     #[serde(rename = "ämnesområden")]
-    amnesomraden: Vec<Ämnesområde>,
-    hänvisningar: Vec<Hv>,
-    morfex: Vec<Morfex>,
-    syntex: Vec<Syntex>,
-    valenser: Vec<Valens>,
-    visas: bool,
+    pub amnesomraden: Vec<Ämnesområde>,
+    pub hänvisningar: Vec<Hv>,
+    pub morfex: Vec<Morfex>,
+    pub syntex: Vec<Syntex>,
+    pub valenser: Vec<Valens>,
+    pub visas: bool,
 }
 
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Cykel {
-    typ: String,
+    pub typ: String,
     // py: Betydelse
     #[serde(rename = "kc_nr")]
-    kc_nr: u32,
-    definition: String,
-    formkommentar: String,
-    huvudkommentar: String,
-    formkommentar_exempel: String,
-    formkommentar_tillägg: String,
-    slutkommentar: String,
-    definitionstillägg: Option<String>,
+    pub kc_nr: u32,
+    pub definition: String,
+    pub formkommentar: String,
+    pub huvudkommentar: String,
+    pub formkommentar_exempel: String,
+    pub formkommentar_tillägg: String,
+    pub slutkommentar: String,
+    pub definitionstillägg: Option<String>,
     #[serde(rename = "ämnesområden")]
-    amnesomraden: Vec<Ämnesområde>,
-    hänvisningar: Vec<Hv>,
-    morfex: Vec<Morfex>,
-    syntex: Vec<Syntex>,
-    valenser: Vec<Valens>,
-    visas: bool,
+    pub amnesomraden: Vec<Ämnesområde>,
+    pub hänvisningar: Vec<Hv>,
+    pub morfex: Vec<Morfex>,
+    pub syntex: Vec<Syntex>,
+    pub valenser: Vec<Valens>,
+    pub visas: bool,
 }

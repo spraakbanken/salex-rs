@@ -11,6 +11,7 @@ mod so_base;
 pub mod so_lemma;
 pub mod superlemma;
 mod syntex;
+mod uttal;
 mod valens;
 
 pub use amnesomrade::Ämnesområde;
@@ -26,4 +27,5 @@ pub use so_base::{SoLemmaRef, SoLemmaRelation, SoLemmaRelationsTyp, SoLemmaType}
 pub use so_lemma::SoLemma;
 pub use superlemma::Superlemma;
 pub use syntex::Syntex;
+pub use uttal::Uttal;
 pub use valens::Valens;

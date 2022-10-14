@@ -1,4 +1,6 @@
-use super::{SentensEllerStilruta, SoLemmaRef, SoLemmaRelation, SoLemmaType, SoLexem, Status};
+use super::{
+    SentensEllerStilruta, SoLemmaRef, SoLemmaRelation, SoLemmaType, SoLexem, Status, Uttal,
+};
 
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]

@@ -19,7 +19,7 @@ pub use base::Status;
 pub use etymologi::Etymologi;
 pub use hv::{Hv, HänvisningsTyp};
 pub use idiom::{Idiom, IdiomBetydelse};
-pub use lexem::SoLexem;
+pub use lexem::{Cykel, SoLexem};
 pub use morfex::Morfex;
 pub use saol_lemma::SaolLemma;
 pub use sentens::SentensEllerStilruta;

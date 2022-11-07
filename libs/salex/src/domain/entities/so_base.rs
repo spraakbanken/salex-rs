@@ -41,7 +41,7 @@ pub struct SoLemmaRelation {
     pub typ: SoLemmaRelationsTyp,
 }
 
-#[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Deserialize, serde::Serialize)]
 #[serde(rename_all = "snake_case", deny_unknown_fields)]
 pub enum SoLemmaRelationsTyp {
     Moderverb,

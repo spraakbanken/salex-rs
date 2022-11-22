@@ -3,6 +3,6 @@
 pub struct SentensEllerStilruta {
     pub typ: String,
     pub text: String,
-    pub origid: u32,
+    pub origid: i32,
     pub orig_ord: String,
 }

@@ -5,4 +5,5 @@ pub struct SentensEllerStilruta {
     pub text: String,
     pub origid: i32,
     pub orig_ord: String,
+    pub visas: bool,
 }

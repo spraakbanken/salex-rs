@@ -1,4 +1,4 @@
-use super::Status;
+use super::{Status, Uttal};
 
 #[derive(Clone, Copy, Debug, serde::Deserialize, serde::Serialize)]
 #[serde(rename_all = "lowercase")]
@@ -31,6 +31,7 @@ pub struct SoLemmaRef {
     pub stam: String,
     pub tagg: String,
     pub ursprung: String,
+    pub uttal: Vec<Uttal>,
 }
 
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]

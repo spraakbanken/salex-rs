@@ -7,17 +7,21 @@ pub struct SaolLemma {
     pub ortografi: String,
     pub status: Status,
     pub visas: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub homograf_nr: Option<u32>,
     pub analys: String,
     pub böjning: String,
     pub saol_klass: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ptv: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub smdb_n: Option<String>,
     pub hänvisningar: Vec<Hv>,
     pub lemma_referenser: Vec<SaolLemmaRef>,
     ursprung: String,
     fack: Vec<String>,
     pub alt: Vec<AltForm>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     kommentar: Option<String>,
     lexem: Vec<SaolLexem>,
     relation: Vec<SaolRelation>,

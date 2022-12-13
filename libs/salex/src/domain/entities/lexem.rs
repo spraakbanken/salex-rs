@@ -16,6 +16,7 @@ pub struct SoLexem {
     pub formkommentar_exempel: String,
     pub formkommentar_tillägg: String,
     pub slutkommentar: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub definitionstillägg: Option<String>,
     #[serde(rename = "ämnesområden")]
     pub amnesomraden: Vec<Ämnesområde>,
@@ -39,6 +40,7 @@ pub struct Cykel {
     pub formkommentar_exempel: String,
     pub formkommentar_tillägg: String,
     pub slutkommentar: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub definitionstillägg: Option<String>,
     #[serde(rename = "ämnesområden")]
     pub amnesomraden: Vec<Ämnesområde>,

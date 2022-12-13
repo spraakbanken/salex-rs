@@ -2,6 +2,7 @@
 #[serde(deny_unknown_fields)]
 pub struct Idiom {
     pub i_nr: u32,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub hänvisning: Option<u32>,
     pub idiom: String,
     pub formkommentar: String,

@@ -15,6 +15,7 @@ pub enum SoLemmaType {
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SoLemmaRef {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub homograf_nr: Option<u32>,
     pub ortografi: String,
     pub visas: bool,

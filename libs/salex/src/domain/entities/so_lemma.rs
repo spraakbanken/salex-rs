@@ -6,6 +6,7 @@ use super::{
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SoLemma {
     // py: Lemma
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub homograf_nr: Option<u32>,
     pub ortografi: String,
     pub visas: bool,

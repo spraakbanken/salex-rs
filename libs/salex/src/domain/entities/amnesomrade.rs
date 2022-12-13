@@ -3,5 +3,6 @@
 pub struct Ämnesområde {
     #[serde(rename = "ämne")]
     pub amne: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub specifikt: Option<String>,
 }

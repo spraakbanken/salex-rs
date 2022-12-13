@@ -91,6 +91,7 @@ pub struct Hv {
     typ: String,
     hänvisning: String,
     visas: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
     text: Option<String>,
 }
 
@@ -112,14 +113,20 @@ pub struct SaolLemmaRef {
     pub lemmatyp: LemmaTyp,
     pub ortografi: String,
     visas: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
     homograf_nr: Option<u32>,
     status: Status,
     hänvisningar: Vec<Hv>,
     ursprung: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     böjningsklass: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ordklass: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     saol_klass: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     analys: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     böjning: Option<String>,
 }
 
@@ -223,11 +230,15 @@ impl From<&str> for LemmaTyp {
 #[serde(rename_all = "camelCase")]
 pub struct AltForm {
     pub grundform: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     homograf_nr: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     analys: Option<String>,
     // #[serde(rename = "type")]
     pub typ: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     fonetik: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     böjning: Option<String>,
 }
 
@@ -309,7 +320,9 @@ impl SaolExempel {
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
 pub struct Fonetik {
     form: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     kommentar: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     typ: Option<String>,
 }
 

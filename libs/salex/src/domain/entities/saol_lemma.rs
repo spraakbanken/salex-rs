@@ -268,6 +268,7 @@ pub struct SaolLexem {
     id: String,
     definition: String,
     exempel: Vec<SaolExempel>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     huvudkommentar: Option<String>,
     formkommentar: Vec<String>,
     hänvisningar: Vec<Hv>,
@@ -309,6 +310,7 @@ impl SaolRelation {
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize)]
 pub struct SaolExempel {
     text: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     parafras: Option<String>,
 }
 

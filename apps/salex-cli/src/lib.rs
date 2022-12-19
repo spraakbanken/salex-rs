@@ -1,4 +1,5 @@
 use flate2::read::GzDecoder;
+use flate2::write;
 use salex::domain::entities::saol_lemma::LemmaTyp;
 use salex::domain::entities::SoLemmaType;
 use salex::domain::entities::Status;
@@ -259,6 +260,59 @@ pub fn lookup_wtype_ordklass(
             write_line_count += 1;
         }
     }
+    log::info!("Line written: {}", write_line_count);
+    Ok(())
+}
+
+#[derive(Debug, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct UpdateValensDto {
+    ortografi: String,
+    s_nr: u32,
+}
+pub fn update_valens(
+    reader: &mut dyn io::BufRead,
+    updates_path: &Path,
+    output_path: &Path,
+) -> Result<(), Error> {
+    log::trace!("read_count_and_write called ...");
+    let mut read_line_count = 0;
+    let mut read_updates = 0;
+    let mut updates: HashMap<u32, UpdateValensDto> = HashMap::new();
+
+    let mut csv_reader = csv::ReaderBuilder::new()
+        .has_headers(false)
+        .from_path(updates_path)?;
+
+    let mut read_words = 0;
+    for record in csv_reader.deserialize() {
+        let valens_dto: UpdateValensDto = record?;
+        updates.insert(valens_dto.s_nr, valens_dto);
+        read_updates += 1;
+    }
+    log::debug!("Updates read: {}", read_updates);
+
+    let output = fs::File::create(output_path)
+        .wrap_err_with(|| format!("Failed creating output '{}'", output_path.display()))?;
+    let mut output = io::BufWriter::new(output);
+    let mut write_line_count = 0;
+
+    for line in reader.lines() {
+        read_line_count += 1;
+        let entry: EntryDto<Superlemma> = serde_json::from_str(&line?)?;
+
+        for so_lemma in entry.entry.so_lemman {
+            if updates.contains_key(&so_lemma.s_nr) {
+                todo!("update so_lemma")
+            }
+        }
+
+        serde_json::to_writer(&mut output, &entry)?;
+        writeln!(&mut output, "")?;
+        write_line_count += 1;
+    }
+    log::info!("Line read: {}", read_line_count);
+
     log::info!("Line written: {}", write_line_count);
     Ok(())
 }

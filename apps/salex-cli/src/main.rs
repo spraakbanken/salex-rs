@@ -55,6 +55,28 @@ fn try_main() -> Result<(), Error> {
             log::debug!("writing results to '{}'", output_path.display());
             salex_cli::lookup_wtype_ordklass(&mut data_reader, &words_path, &output_path)?;
         }
+        Some(("update-valens", submatches)) => {
+            log::trace!("command 'lookup'");
+            let input = submatches
+                .get_one::<PathBuf>("data")
+                .expect("`data` is required");
+            log::debug!("reading data from '{}'", input.display());
+            let fp_in = fs::File::open(input)?;
+            let gz_in = GzDecoder::new(fp_in);
+            let mut data_reader = io::BufReader::new(gz_in);
+
+            let updates_path = submatches
+                .get_one::<PathBuf>("updates")
+                .expect("`updates` is required");
+            log::debug!("reading updates from '{}'", updates_path.display());
+
+            let output_path = submatches
+                .get_one::<PathBuf>("output")
+                .expect("`output` is required");
+
+            log::debug!("writing results to '{}'", output_path.display());
+            salex_cli::update_valens(&mut data_reader, &updates_path, &output_path)?;
+        }
         _ => {
             unreachable!();
         }
@@ -104,6 +126,32 @@ fn cli() -> clap::Command {
                     Arg::new("words")
                         .num_args(1)
                         .help("words to lookup")
+                        .value_parser(clap::value_parser!(PathBuf))
+                        .required(true),
+                )
+                .arg(
+                    Arg::new("output")
+                        .num_args(1)
+                        .help("file to write to")
+                        .value_parser(clap::value_parser!(PathBuf))
+                        .required(true),
+                ),
+        )
+        .subcommand(
+            Command::new("update-valens")
+                .about("Update valens in salex.jsonl.gz from csv")
+                .arg_required_else_help(true)
+                .arg(
+                    Arg::new("input")
+                        .num_args(1)
+                        .help("jsonl.gz file to read")
+                        .value_parser(clap::value_parser!(PathBuf))
+                        .required(true),
+                )
+                .arg(
+                    Arg::new("updates")
+                        .num_args(1)
+                        .help("updates to perform")
                         .value_parser(clap::value_parser!(PathBuf))
                         .required(true),
                 )

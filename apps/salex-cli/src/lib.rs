@@ -1,3 +1,5 @@
+use chrono::Utc;
+use eyre::WrapErr;
 use flate2::read::GzDecoder;
 use flate2::write;
 use salex::domain::entities::saol_lemma::LemmaTyp;
@@ -7,7 +9,7 @@ use salex::{EntryDto, Superlemma};
 use serde::Deserialize;
 use serde_json::Value;
 use std::collections::{HashMap, HashSet};
-use std::io::BufRead;
+use std::io::{BufRead, Write};
 use std::path::{Path, PathBuf};
 use std::{fs, io, process};
 type Error = Box<dyn std::error::Error>;
@@ -268,24 +270,43 @@ pub fn lookup_wtype_ordklass(
 #[serde(deny_unknown_fields)]
 pub struct UpdateValensDto {
     ortografi: String,
+    ordklass: String,
+    wtype: String,
+    pre_valens: String,
+    valens: String,
+    vl_typ: String,
+    fkom: String,
+    def: String,
+    deft: String,
+    typ: String,
+    hkom: String,
+    vl_nr: u32,
     s_nr: u32,
+    lm_sabob: u32,
+    vl_status: u32,
+    #[serde(rename = "Flytta till kc_nr")]
+    flytta_till_kcnr: Option<u32>,
+    #[serde(rename = "Kommentar")]
+    kommentar: String,
 }
 pub fn update_valens(
     reader: &mut dyn io::BufRead,
     updates_path: &Path,
     output_path: &Path,
-) -> Result<(), Error> {
-    log::trace!("read_count_and_write called ...");
+) -> eyre::Result<(), Error> {
+    log::trace!("update_valens called ...");
     let mut read_line_count = 0;
     let mut read_updates = 0;
     let mut updates: HashMap<u32, UpdateValensDto> = HashMap::new();
 
     let mut csv_reader = csv::ReaderBuilder::new()
-        .has_headers(false)
+        .has_headers(true)
+        .delimiter(b';')
         .from_path(updates_path)?;
 
     let mut read_words = 0;
     for record in csv_reader.deserialize() {
+        // log::trace!("record = {:?}", record);
         let valens_dto: UpdateValensDto = record?;
         updates.insert(valens_dto.s_nr, valens_dto);
         read_updates += 1;
@@ -299,14 +320,104 @@ pub fn update_valens(
 
     for line in reader.lines() {
         read_line_count += 1;
-        let entry: EntryDto<Superlemma> = serde_json::from_str(&line?)?;
+        let mut entry: EntryDto<Superlemma> = serde_json::from_str(&line?)?;
+        let mut entry_updated = false;
+        for so_lemma in &mut entry.entry.so_lemman {
+            if let Some(update) = updates.get(&so_lemma.s_nr) {
+                let mut kommentar = String::new();
 
-        for so_lemma in entry.entry.so_lemman {
-            if updates.contains_key(&so_lemma.s_nr) {
-                todo!("update so_lemma")
+                if let Some(kc_nr) = update.flytta_till_kcnr {
+                    // log::debug!("update = {:#?}", update);
+                    // log::debug!("so_lemma = {:#?}", so_lemma);
+                    let mut valens = None;
+                    for lexem in &mut so_lemma.lexem {
+                        if let Some(pos) =
+                            lexem.valenser.iter().position(|x| x.vl_nr == update.vl_nr)
+                        {
+                            valens = Some(lexem.valenser.remove(pos));
+                            break;
+                        }
+                        log::debug!("update = {:#?}", update);
+                        log::debug!("so_lemma = {:#?}", so_lemma);
+                        todo!("look in cykler")
+                    }
+                    let mut valens = valens.expect("should have found valens");
+                    valens.prevalens_def = update.pre_valens.clone();
+                    if !update.kommentar.is_empty() {
+                        if kommentar.is_empty() {
+                            kommentar = update.kommentar.clone();
+                        } else {
+                            kommentar = format!("{};{}", kommentar, update.kommentar);
+                        }
+                    }
+                    for lexem in &mut so_lemma.lexem {
+                        if lexem.kc_nr == kc_nr {
+                            lexem.valenser.push(valens.clone());
+                            break;
+                        }
+                        let mut found_kc_nr = false;
+                        for cykel in &mut lexem.cykler {
+                            if cykel.kc_nr == kc_nr {
+                                cykel.valenser.push(valens.clone());
+                                found_kc_nr = true;
+                                break;
+                            }
+                        }
+                        if found_kc_nr {
+                            break;
+                        }
+                    }
+                    // log::debug!("so_lemma = {:#?}", so_lemma);
+                    // continue;
+                    entry_updated = true;
+                } else {
+                    for lexem in &mut so_lemma.lexem {
+                        for valens in &mut lexem.valenser {
+                            if valens.vl_nr == update.vl_nr {
+                                // log::debug!("update = {:#?}", update);
+                                // log::debug!("valens = {:#?}", valens);
+                                valens.prevalens_def = update.pre_valens.clone();
+                                // log::debug!("valens = {:#?}", valens);
+                                if !update.kommentar.is_empty() {
+                                    if kommentar.is_empty() {
+                                        kommentar = update.kommentar.clone();
+                                    } else {
+                                        kommentar = format!("{};{}", kommentar, update.kommentar);
+                                    }
+                                }
+                                entry_updated = true;
+                            }
+                        }
+                        for cykel in &mut lexem.cykler {
+                            for valens in &mut cykel.valenser {
+                                if valens.vl_nr == update.vl_nr {
+                                    // log::debug!("update = {:#?}", update);
+                                    // log::debug!("valens = {:#?}", valens);
+                                    valens.prevalens_def = update.pre_valens.clone();
+                                    // log::debug!("valens = {:#?}", valens);
+                                    if !update.kommentar.is_empty() {
+                                        if kommentar.is_empty() {
+                                            kommentar = update.kommentar.clone();
+                                        } else {
+                                            kommentar =
+                                                format!("{};{}", kommentar, update.kommentar);
+                                        }
+                                    }
+                                    entry_updated = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                so_lemma.append_kommentar(kommentar.as_str());
             }
         }
 
+        if entry_updated {
+            entry.last_modified = Utc::now();
+            entry.last_modified_by = "kristian.blensenius@gu.se".into();
+            entry.message = "prevalens updated".into();
+        }
         serde_json::to_writer(&mut output, &entry)?;
         writeln!(&mut output, "")?;
         write_line_count += 1;

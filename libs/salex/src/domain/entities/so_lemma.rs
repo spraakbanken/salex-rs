@@ -35,12 +35,19 @@ pub struct SoLemma {
     pub artikelkommentar: String,
 }
 
-// impl SoLemma {
-//     pub fn new(l_nr: u32, ortografi: String, visas: bool) -> Self {
-//         Self {
-//             l_nr,
-//             ortografi,
-//             visas,
-//         }
-//     }
-// }
+impl SoLemma {
+    //     pub fn new(l_nr: u32, ortografi: String, visas: bool) -> Self {
+    //         Self {
+    //             l_nr,
+    //             ortografi,
+    //             visas,
+    //         }
+    //     }
+    pub fn append_kommentar(&mut self, kommentar: &str) {
+        if self.kommentar.is_empty() {
+            self.kommentar = kommentar.to_string();
+        } else {
+            self.kommentar = format!("{};{}", self.kommentar, kommentar);
+        }
+    }
+}

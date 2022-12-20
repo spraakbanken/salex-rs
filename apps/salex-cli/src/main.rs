@@ -58,8 +58,8 @@ fn try_main() -> Result<(), Error> {
         Some(("update-valens", submatches)) => {
             log::trace!("command 'lookup'");
             let input = submatches
-                .get_one::<PathBuf>("data")
-                .expect("`data` is required");
+                .get_one::<PathBuf>("input")
+                .expect("`input` is required");
             log::debug!("reading data from '{}'", input.display());
             let fp_in = fs::File::open(input)?;
             let gz_in = GzDecoder::new(fp_in);

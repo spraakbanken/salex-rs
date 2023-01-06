@@ -9,7 +9,7 @@ edition = "2021"
 clap = "4.0.10"
 dotenvy = "0.15.5"
 salex-so-infrastructure = { version = "0.1.0", path = "../../libs/salex-so-infrastructure" }
-tokio = { version = "1.21.1", default-features = false, features = [
+tokio = { version = "1.23.1", default-features = false, features = [
     "macros",
     "rt-multi-thread",
 ] }

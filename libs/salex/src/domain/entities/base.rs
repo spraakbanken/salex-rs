@@ -2,11 +2,11 @@
 #[serde(rename_all = "UPPERCASE")]
 pub enum Status {
     Ny,
-    #[serde(alias = "PÅBÖRJAD")]
+    #[serde(rename = "PÅBÖRJAD")]
     Påbörjad,
     Granska,
     Ok,
-    #[serde(alias = "FÖRRÅD")]
+    #[serde(rename = "FÖRRÅD")]
     Förråd,
     #[serde(rename = "OKLAR STATUS")]
     OklarStatus,

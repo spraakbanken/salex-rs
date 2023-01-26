@@ -32,6 +32,7 @@ pub struct SoLemmaRef {
     pub stam: String,
     pub tagg: String,
     pub ursprung: String,
+    pub relationer: Vec<SoLemmaRelation>,
     pub uttal: Vec<Uttal>,
 }
 

@@ -6,7 +6,6 @@ pub struct SoLemmaRef {
     pub lemmatyp: LemmaRefTyp,
 }
 
-
 #[derive(Clone, Debug, serde::Deserialize, serde::Serialize, PartialEq, PartialOrd, Ord, Eq)]
 pub enum LemmaRefTyp {
     Lemma,

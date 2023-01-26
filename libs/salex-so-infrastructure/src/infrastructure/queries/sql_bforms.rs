@@ -1,8 +1,7 @@
-use salex_so::application::queries::{BFormDto, GetBForms};
-use async_trait::async_trait;
 use crate::{DbPool, DbRow};
-use sqlx::{Row, FromRow};
-
+use async_trait::async_trait;
+use salex_so::application::queries::{BFormDto, GetBForms};
+use sqlx::{FromRow, Row};
 
 pub struct SqlGetBForms {
     db: DbPool,
@@ -23,7 +22,9 @@ impl GetBForms for SqlGetBForms {
         let bforms_rows = sqlx::query(stmt)
             .bind(s_nr)
             .bind(bklass)
-            .fetch_all(&self.db).await.expect("");
+            .fetch_all(&self.db)
+            .await
+            .expect("");
         // for row in bforms_rows {
         //     println!("row = {:?}", row);
         // }

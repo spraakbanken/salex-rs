@@ -1,8 +1,8 @@
+use crate::{DbPool, DbRow};
 use async_trait::async_trait;
 use salex_so::application::repositories::SoOrdRepository;
-use salex_so::domain::entities::{SoOrd, SoLemmaRef};
-use crate::{DbPool, DbRow};
-use sqlx::{Row, FromRow};
+use salex_so::domain::entities::{SoLemmaRef, SoOrd};
+use sqlx::{FromRow, Row};
 
 pub struct SqlSoOrdRepository {
     db: DbPool,
@@ -30,17 +30,15 @@ impl FromRow<'_, DbRow> for SoOrdWrapper {
     fn from_row(row: &DbRow) -> sqlx::Result<Self> {
         let extra: Extra = serde_json::from_str(row.try_get("extras")?).expect("");
         let Extra { lemma_referenser } = extra;
-        Ok(Self(
-            SoOrd {
-                ortografi: row.try_get("ortografi")?,
-                s_nr: row.try_get("s_nr")?,
-                lemmaundertyp: row.try_get("lemmaundertyp")?,
-                sorteringsform: row.try_get("sorteringsform")?,
-                lm_sabob: row.try_get("lm_sabob")?,
-                böjningsklass: row.try_get("böjningsklass")?,
-                lemma_referenser,
-            }
-        ))
+        Ok(Self(SoOrd {
+            ortografi: row.try_get("ortografi")?,
+            s_nr: row.try_get("s_nr")?,
+            lemmaundertyp: row.try_get("lemmaundertyp")?,
+            sorteringsform: row.try_get("sorteringsform")?,
+            lm_sabob: row.try_get("lm_sabob")?,
+            böjningsklass: row.try_get("böjningsklass")?,
+            lemma_referenser,
+        }))
     }
 }
 
@@ -74,8 +72,8 @@ impl SoOrdRepository for SqlSoOrdRepository {
             FROM so_ord
             WHERE ortografi = ?
             ";
-            // COLLATE 'utf8mb4_bin'
-            // ";
+        // COLLATE 'utf8mb4_bin'
+        // ";
 
         let num_heteronyms = self.num_heteronyms(lemma).await;
 
@@ -83,15 +81,14 @@ impl SoOrdRepository for SqlSoOrdRepository {
     }
 }
 impl SqlSoOrdRepository {
-
     async fn num_heteronyms(&self, lemma: &SoOrd) -> u32 {
         let stmt = "
             SELECT ortografi
             FROM so_ord
             WHERE ortografi = ?
             ";
-            // COLLATE 'utf8mb4_bin'
-            // ";
+        // COLLATE 'utf8mb4_bin'
+        // ";
 
         let heteronyms = sqlx::query(stmt)
             .bind(&lemma.ortografi)

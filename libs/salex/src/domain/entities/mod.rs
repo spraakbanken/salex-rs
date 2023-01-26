@@ -24,7 +24,7 @@ pub use lexem::{Cykel, SoLexem};
 pub use morfex::Morfex;
 pub use saol_lemma::SaolLemma;
 pub use sentens::SentensEllerStilruta;
-pub use so_lemma::{SoLemma,SoBas, SoLemmaRef, SoLemmaRelation, SoLemmaRelationsTyp, SoLemmaType};
+pub use so_lemma::{SoBas, SoLemma, SoLemmaRef, SoLemmaRelation, SoLemmaRelationsTyp, SoLemmaType};
 pub use superlemma::Superlemma;
 pub use syntex::Syntex;
 pub use uttal::Uttal;

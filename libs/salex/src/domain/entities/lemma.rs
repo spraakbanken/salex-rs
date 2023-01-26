@@ -9,3 +9,14 @@ pub struct Lemma {
     pub ortografi: String,
     pub visas: bool,
 }
+
+impl Default for Lemma {
+    fn default() -> Self {
+        Self {
+            homograf_nr: None,
+            status: Status::Ny,
+            ortografi: String::default(),
+            visas: true,
+        }
+    }
+}

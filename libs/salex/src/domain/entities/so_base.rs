@@ -42,6 +42,7 @@ pub struct SoLemmaRelation {
     pub l_nr: u32,
     pub id_add: u32,
     pub typ: SoLemmaRelationsTyp,
+    pub visas: bool,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, serde::Deserialize, serde::Serialize)]

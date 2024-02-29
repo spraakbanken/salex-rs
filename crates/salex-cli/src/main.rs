@@ -10,7 +10,7 @@ fn main() {
         .format_timestamp(None)
         .init();
     if let Err(err) = try_main() {
-        log::error!("An error occured: {:?}", err);
+        log::error!("An error occurred: {:?}", err);
         process::exit(1);
     }
 }
@@ -31,7 +31,7 @@ fn try_main() -> Result<(), Error> {
             let fp_in = fs::File::open(input)?;
             let gz_in = GzDecoder::new(fp_in);
             let mut reader = io::BufReader::new(gz_in);
-            salex_cli::read_count_and_write(&mut reader, &output_stub)?;
+            salex_cli::read_count_and_write(&mut reader, output_stub)?;
         }
         Some(("lookup-wtype-ordklass", submatches)) => {
             log::trace!("command 'lookup'");
@@ -53,7 +53,7 @@ fn try_main() -> Result<(), Error> {
                 .expect("`output` is required");
 
             log::debug!("writing results to '{}'", output_path.display());
-            salex_cli::lookup_wtype_ordklass(&mut data_reader, &words_path, &output_path)?;
+            salex_cli::lookup_wtype_ordklass(&mut data_reader, words_path, output_path)?;
         }
         Some(("update-valens", submatches)) => {
             log::trace!("command 'lookup'");
@@ -75,7 +75,7 @@ fn try_main() -> Result<(), Error> {
                 .expect("`output` is required");
 
             log::debug!("writing results to '{}'", output_path.display());
-            salex_cli::update_valens(&mut data_reader, &updates_path, &output_path)?;
+            salex_cli::update_valens(&mut data_reader, updates_path, output_path)?;
         }
         _ => {
             unreachable!();

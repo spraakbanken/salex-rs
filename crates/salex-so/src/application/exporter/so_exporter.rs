@@ -27,8 +27,8 @@ impl SoExporter {
         mut writer: Box<dyn io::Write + 'a>,
         ord_idx: &[u32], // , ord_ix: Box<dyn Iterator<Item=u32>>
     ) -> Result<(), Box<dyn std::error::Error>> {
-        writer.write(b"<!DOCTYPE html[\n")?;
-        writer.write(b"    <!DOCTYPE html[\n")?;
+        writeln!(writer, "<!DOCTYPE html[")?;
+        writeln!(writer, "    <!DOCTYPE html[")?;
         writeln!(writer, r#"    <!ENTITY ouml  "&#246;">"#)?;
         writeln!(writer, r#"    <!ENTITY Ouml "&#214;">"#)?;
         writeln!(writer, r#"    <!ENTITY auml "&#228;">"#)?;
@@ -41,10 +41,10 @@ impl SoExporter {
         writeln!(writer, r#"    <!ENTITY amp "&#38;">"#)?;
         writeln!(writer, r#"    <!ENTITY lt "&#60;">"#)?;
         writeln!(writer, r#"    <!ENTITY gt "&#62;">"#)?;
-        writer.write(b"    ]>\n")?;
-        writer.write(b"<html>\n")?;
+        writeln!(writer, "    ]>")?;
+        writeln!(writer, "<html>")?;
         self.skriv_head(&mut writer)?;
-        writer.write(b"<body>\n")?;
+        writeln!(writer, "<body>")?;
         writeln!(writer, r#"<div class="lemmalista">"#)?;
         for idx in ord_idx {
             tracing::debug!("idx={}", idx);
@@ -54,8 +54,8 @@ impl SoExporter {
             writeln!(writer, "{}", adds_str)?;
         }
         writeln!(writer, "</div>")?;
-        writer.write(b"</body>\n")?;
-        writer.write(b"</html>\n")?;
+        writeln!(writer, "</body>")?;
+        writeln!(writer, "</html>")?;
         Ok(())
     }
 
@@ -63,7 +63,10 @@ impl SoExporter {
         &self,
         writer: &mut Box<dyn io::Write + 'a>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        writer.write(br#"<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta><title>Lista ord eller artiklar</title></head>"#)?;
+        writeln!(
+            writer,
+            r#"<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta><title>Lista ord eller artiklar</title></head>"#
+        )?;
         Ok(())
     }
 
